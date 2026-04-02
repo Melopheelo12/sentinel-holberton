@@ -35,7 +35,9 @@ const SchoolCard = ({ school, isSelected, onClick }: SchoolCardProps) => {
           </div>
           <div className="flex items-center gap-1.5 ml-4">
             <MapPin className="w-3 h-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">{school.type}</span>
+            <span className="text-xs text-muted-foreground">
+              {school.type} · {school.statut === "public" ? "Public" : "Privé"}
+            </span>
           </div>
         </div>
         <span className={`shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full ${config.bg} ${config.text}`}>
