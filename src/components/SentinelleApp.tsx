@@ -1,15 +1,20 @@
 import { useState, useMemo } from "react";
-import { Search, ChevronDown, Leaf } from "lucide-react";
-import { schools, schoolTypes, statutOptions, School } from "@/data/schools";
+import { Search, ChevronDown, Leaf, ShieldCheck, LogOut } from "lucide-react";
+import { schools, schoolTypes, statutOptions } from "@/data/schools";
+import { UserRole, roles } from "@/data/preventions";
 import SchoolCard from "./SchoolCard";
 import MapView from "./MapView";
+import RoleSelector from "./RoleSelector";
+import PreventionPanel from "./PreventionPanel";
 import sentinelleLogo from "@/assets/sentinelle-logo.png";
 
 const SentinelleApp = () => {
+  const [role, setRole] = useState<UserRole | null>(null);
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState("Tous les types");
   const [selectedStatut, setSelectedStatut] = useState("Tous");
   const [selectedSchool, setSelectedSchool] = useState<string | null>(null);
+  const [showPrevention, setShowPrevention] = useState(true);
 
   const filtered = useMemo(() => {
     return schools.filter((s) => {
@@ -23,22 +28,52 @@ const SentinelleApp = () => {
     });
   }, [search, selectedType, selectedStatut]);
 
+  if (!role) {
+    return <RoleSelector onSelectRole={(r) => { setRole(r); setShowPrevention(true); }} />;
+  }
+
+  const roleInfo = roles[role];
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
       <aside className="w-[380px] h-screen flex flex-col bg-card border-r border-border shadow-sm shrink-0">
         {/* Header */}
         <div className="px-5 pt-5 pb-4 border-b border-border">
-          <div className="flex items-center gap-3 mb-5">
-            <img src={sentinelleLogo} alt="Sentinelle" className="w-10 h-10" />
-            <div>
-              <h1 className="text-xl font-bold leading-tight text-foreground font-display">
-                Sentinelle
-              </h1>
-              <p className="text-xs font-medium tracking-wide uppercase text-muted-foreground">
-                Bordeaux · Diagnostic Chaleur
-              </p>
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-3">
+              <img src={sentinelleLogo} alt="Sentinelle" className="w-10 h-10" />
+              <div>
+                <h1 className="text-xl font-bold leading-tight text-foreground font-display">
+                  Sentinelle
+                </h1>
+                <p className="text-xs font-medium tracking-wide uppercase text-muted-foreground">
+                  Bordeaux · Diagnostic Chaleur
+                </p>
+              </div>
             </div>
+            <button
+              onClick={() => setRole(null)}
+              title="Changer de rôle"
+              className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Role badge */}
+          <div className="flex items-center justify-between mb-4 px-3 py-2 rounded-lg bg-accent/50 border border-primary/10">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">{roleInfo.icon}</span>
+              <span className="text-sm font-medium text-accent-foreground">{roleInfo.label}</span>
+            </div>
+            <button
+              onClick={() => setShowPrevention(true)}
+              className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              Prévention
+            </button>
           </div>
 
           <div className="space-y-2.5">
@@ -70,7 +105,7 @@ const SentinelleApp = () => {
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
             </div>
 
-            {/* Statut filter (Public / Privé) */}
+            {/* Statut filter */}
             <div className="flex gap-2">
               {statutOptions.map((opt) => (
                 <button
@@ -120,8 +155,11 @@ const SentinelleApp = () => {
         </div>
       </aside>
 
-      {/* Map */}
-      <MapView schools={filtered} selectedSchool={selectedSchool} />
+      {/* Map + Prevention overlay */}
+      <div className="flex-1 relative">
+        <MapView schools={filtered} selectedSchool={selectedSchool} />
+        <PreventionPanel role={role} open={showPrevention} onClose={() => setShowPrevention(false)} />
+      </div>
     </div>
   );
 };
