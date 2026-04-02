@@ -1,13 +1,7 @@
-import Sidebar from "@/components/Sidebar";
-import MapView from "@/components/MapView";
+import SentinelleApp from "@/components/SentinelleApp";
 
 const Index = () => {
-  return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar />
-      <MapView />
-    </div>
-  );
+  return <SentinelleApp />;
 };
 
 export default Index;
