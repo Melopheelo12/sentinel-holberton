@@ -5,7 +5,7 @@ import SchoolCard from "./SchoolCard";
 import MapView from "./MapView";
 import sentinelleLogo from "@/assets/sentinelle-logo.png";
 
-const Sidebar = () => {
+const SentinelleApp = () => {
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState("Tous les types");
   const [selectedStatut, setSelectedStatut] = useState("Tous");
@@ -22,16 +22,6 @@ const Sidebar = () => {
       return matchesSearch && matchesType && matchesStatut;
     });
   }, [search, selectedType, selectedStatut]);
-
-  return { filtered, selectedSchool, setSelectedSchool, search, setSearch, selectedType, setSelectedType, selectedStatut, setSelectedStatut };
-};
-
-const SentinelleApp = () => {
-  const {
-    filtered, selectedSchool, setSelectedSchool,
-    search, setSearch, selectedType, setSelectedType,
-    selectedStatut, setSelectedStatut,
-  } = Sidebar();
 
   return (
     <div className="flex h-screen overflow-hidden">
