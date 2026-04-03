@@ -6,6 +6,7 @@ import SchoolCard from "./SchoolCard";
 import MapView from "./MapView";
 import RoleSelector from "./RoleSelector";
 import PreventionPanel from "./PreventionPanel";
+import DiagnosticPanel from "./DiagnosticPanel";
 import sentinelleLogo from "@/assets/sentinelle-logo.png";
 
 const SentinelleApp = () => {
@@ -143,7 +144,10 @@ const SentinelleApp = () => {
                 key={school.id}
                 school={school}
                 isSelected={selectedSchool === school.id}
-                onClick={() => setSelectedSchool(school.id === selectedSchool ? null : school.id)}
+                onClick={() => {
+                  setSelectedSchool(school.id === selectedSchool ? null : school.id);
+                  setShowPrevention(false);
+                }}
               />
             ))}
             {filtered.length === 0 && (
@@ -155,12 +159,21 @@ const SentinelleApp = () => {
         </div>
       </aside>
 
-      {/* Map + Prevention overlay */}
+      {/* Map + overlays */}
       <div className="flex-1 relative">
         <MapView
           selectedLat={selectedSchool ? filtered.find(s => s.id === selectedSchool)?.lat : undefined}
           selectedLng={selectedSchool ? filtered.find(s => s.id === selectedSchool)?.lng : undefined}
         />
+        {/* Diagnostic panel (API réelle) — affiché quand une école est sélectionnée */}
+        {selectedSchool && !showPrevention && (
+          <DiagnosticPanel
+            schoolName={filtered.find(s => s.id === selectedSchool)?.name ?? ""}
+            role={role}
+            onClose={() => setSelectedSchool(null)}
+          />
+        )}
+        {/* Prevention panel */}
         <PreventionPanel role={role} open={showPrevention} onClose={() => setShowPrevention(false)} />
       </div>
     </div>
