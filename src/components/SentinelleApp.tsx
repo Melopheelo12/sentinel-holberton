@@ -157,7 +157,7 @@ const SentinelleApp = () => {
 
       {/* Map + Prevention overlay */}
       <div className="flex-1 relative">
-        <MapView schools={filtered} selectedSchool={selectedSchool} />
+        <MapView />
         <PreventionPanel role={role} open={showPrevention} onClose={() => setShowPrevention(false)} />
       </div>
     </div>
