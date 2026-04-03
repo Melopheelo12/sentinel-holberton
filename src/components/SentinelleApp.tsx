@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Search, ChevronDown, Leaf, ShieldCheck, LogOut } from "lucide-react";
 import { schools, schoolTypes, statutOptions } from "@/data/schools";
 import { UserRole, roles } from "@/data/preventions";
